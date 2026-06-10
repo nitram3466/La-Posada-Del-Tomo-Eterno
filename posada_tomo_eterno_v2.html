@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>La Posada del Tomo Eterno</title>
+<link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#c9a84c;--gold-dim:#c9a84c88;--gold-faint:#c9a84c22;
+  --crimson:#8b1a1a;--parchment:#f0e6c8;--parchment-dim:#f0e6c8aa;
+  --bg:#1a1208;--bg-card:#2d1f0e;--bg-card-hover:#3a2710;--bg-page:#1e1108;
+}
+html{scroll-behavior:smooth}
+body{font-family:'IM Fell English',serif;background:var(--bg);color:var(--parchment);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse 70% 40% at 50% 0%,#3d1f0a55 0%,transparent 70%),radial-gradient(ellipse 30% 60% at 5% 50%,#8b1a1a18 0%,transparent 60%),radial-gradient(ellipse 30% 60% at 95% 50%,#8b1a1a18 0%,transparent 60%);pointer-events:none}
+
+/* HEADER */
+header{position:relative;z-index:2;text-align:center;padding:3rem 1rem 1.5rem;border-bottom:2px solid #c9a84c44}
+.inn-sign{font-family:'Uncial Antiqua',serif;font-size:clamp(1.8rem,5vw,3rem);color:var(--gold);text-shadow:0 0 40px #c9a84c55;letter-spacing:3px;line-height:1.2}
+.inn-tagline{font-style:italic;color:var(--gold-dim);font-size:clamp(.85rem,2vw,1rem);margin-top:.5rem}
+.rune-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:1rem auto 0;color:#c9a84c77;font-size:1.1rem;max-width:400px}
+.rune-divider::before,.rune-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,#c9a84c66)}
+.rune-divider::after{background:linear-gradient(270deg,transparent,#c9a84c66)}
+
+/* HERO LORE */
+.hero-lore{position:relative;z-index:2;text-align:center;max-width:680px;margin:2.5rem auto 0;padding:0 1.5rem}
+.hero-lore p{font-style:italic;color:var(--parchment-dim);font-size:1rem;line-height:1.9}
+
+/* MAIN */
+main{position:relative;z-index:2;max-width:960px;margin:2.5rem auto 0;padding:0 1rem 6rem}
+.tome-header{text-align:center;margin-bottom:1.5rem}
+.tome-title{font-family:'Uncial Antiqua',serif;font-size:clamp(1.3rem,3vw,1.8rem);color:var(--gold)}
+.tome-subtitle{font-style:italic;color:var(--parchment-dim);font-size:.9rem;margin-top:.3rem}
+
+.tome-frame{background:var(--bg-page);border:1.5px solid #c9a84c44;border-radius:4px;padding:.75rem;position:relative}
+.tome-frame::before{content:'';position:absolute;inset:6px;border:1px solid #c9a84c1a;border-radius:2px;pointer-events:none}
+.corner{position:absolute;color:#c9a84c55;font-size:1.1rem}
+.c-tl{top:8px;left:10px}.c-tr{top:8px;right:10px}.c-bl{bottom:8px;left:10px}.c-br{bottom:8px;right:10px}
+
+/* FILTER BAR */
+.filter-bar{display:flex;flex-wrap:wrap;gap:.5rem;padding:1rem 1.5rem .75rem;border-bottom:1px solid #c9a84c22}
+.filter-btn{font-family:'IM Fell English',serif;font-size:.85rem;color:#c9a84caa;background:transparent;border:1px solid #c9a84c44;border-radius:2px;padding:.3rem .9rem;cursor:pointer;transition:all .2s}
+.filter-btn:hover,.filter-btn.active{background:#c9a84c18;color:var(--gold);border-color:#c9a84c88}
+
+/* ITEMS GRID */
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;padding:1.25rem 1rem 1.5rem}
+.item-card{background:var(--bg-card);border:1px solid #c9a84c33;border-radius:3px;padding:1.1rem 1rem;position:relative;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+.item-card:hover{border-color:#c9a84c88;background:var(--bg-card-hover);transform:translateY(-2px)}
+.item-badge-dot{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.item-img{width:100%;height:130px;object-fit:cover;border-radius:2px;margin-bottom:.8rem;border:1px solid #c9a84c22}
+.item-seal{width:52px;height:52px;margin:0 auto .8rem;display:flex;align-items:center;justify-content:center}
+.item-seal svg{width:52px;height:52px}
+.item-name{font-family:'Uncial Antiqua',serif;font-size:.9rem;color:var(--gold);text-align:center;margin-bottom:.4rem;line-height:1.35}
+.item-desc{font-style:italic;font-size:.8rem;color:var(--parchment-dim);text-align:center;line-height:1.55;margin-bottom:.8rem}
+.item-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #c9a84c22;padding-top:.6rem}
+.item-price{font-family:'Uncial Antiqua',serif;color:var(--gold);font-size:.9rem}
+.item-tag{font-size:.7rem;font-style:italic;color:var(--crimson);background:#8b1a1a22;border:1px solid #8b1a1a55;border-radius:2px;padding:.15rem .5rem}
+.empty-msg{text-align:center;padding:4rem 1rem;color:var(--parchment-dim);font-style:italic}
+
+/* CART BAR */
+.cart-bar{position:fixed;bottom:0;left:0;right:0;z-index:50;background:#140e06f0;border-top:1px solid #c9a84c44;padding:.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;backdrop-filter:blur(6px)}
+.cart-info{font-style:italic;color:var(--parchment-dim);font-size:.9rem;flex:1}
+.cart-total{font-family:'Uncial Antiqua',serif;color:var(--gold);font-size:1.1rem;white-space:nowrap}
+.contact-btn{font-family:'IM Fell English',serif;font-style:italic;background:var(--crimson);color:var(--parchment);border:1px solid #c9a84c66;padding:.5rem 1.3rem;border-radius:2px;cursor:pointer;font-size:.9rem;transition:background .2s;white-space:nowrap;text-decoration:none;display:inline-block}
+.contact-btn:hover{background:#a82222}
+
+/* MODAL PRODUCTO */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:100;background:#1a120899;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal-tome{background:var(--bg-page);border:2px solid #c9a84c66;border-radius:4px;padding:2rem 1.75rem;max-width:460px;width:100%;position:relative;animation:modalIn .2s ease;max-height:90vh;overflow-y:auto}
+@keyframes modalIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer;line-height:1}
+.modal-img{width:100%;max-height:220px;object-fit:cover;border-radius:3px;margin-bottom:1rem;border:1px solid #c9a84c33}
+.modal-seal{width:64px;height:64px;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center}
+.modal-seal svg{width:64px;height:64px}
+.modal-title{font-family:'Uncial Antiqua',serif;color:var(--gold);font-size:1.35rem;text-align:center;margin-bottom:.6rem;line-height:1.3}
+.modal-body{color:var(--parchment-dim);font-style:italic;font-size:.95rem;line-height:1.75;text-align:center;margin-bottom:1.25rem}
+.modal-price{font-family:'Uncial Antiqua',serif;color:var(--gold);font-size:1.5rem;text-align:center;margin-bottom:1.25rem}
+.modal-add{width:100%;font-family:'Uncial Antiqua',serif;background:var(--crimson);color:var(--parchment);border:1px solid #c9a84c88;padding:.65rem;border-radius:2px;cursor:pointer;font-size:1rem;transition:background .2s}
+.modal-add:hover:not(:disabled){background:#a82222}
+.modal-add:disabled{opacity:.55;cursor:default}
+
+/* ADMIN BUTTON */
+.admin-toggle{position:fixed;bottom:70px;right:16px;z-index:60;background:#1a1208;border:1px solid #c9a84c44;color:#c9a84c66;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.admin-toggle:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ADMIN PANEL */
+.admin-panel{display:none;position:fixed;inset:0;z-index:200;background:#0e0904f5;overflow-y:auto;padding:2rem 1rem 4rem;backdrop-filter:blur(8px)}
+.admin-panel.open{display:block}
+.admin-inner{max-width:700px;margin:0 auto}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;border-bottom:1px solid #c9a84c44;padding-bottom:1rem}
+.admin-title{font-family:'Uncial Antiqua',serif;color:var(--gold);font-size:1.6rem}
+.admin-close{background:none;border:none;color:var(--gold);font-size:1.6rem;cursor:pointer}
+
+/* LOGIN */
+.admin-login{text-align:center;padding:4rem 1rem}
+.admin-login-title{font-family:'Uncial Antiqua',serif;color:var(--gold);font-size:1.5rem;margin-bottom:1rem}
+.admin-login p{color:var(--parchment-dim);font-style:italic;margin-bottom:1.5rem}
+.admin-input{font-family:'IM Fell English',serif;background:#2d1f0e;border:1px solid #c9a84c44;color:var(--parchment);padding:.6rem 1rem;border-radius:2px;font-size:1rem;width:100%;max-width:320px;display:block;margin:.5rem auto}
+.admin-input:focus{outline:none;border-color:var(--gold)}
+.admin-btn{font-family:'Uncial Antiqua',serif;background:var(--crimson);color:var(--parchment);border:1px solid #c9a84c66;padding:.55rem 1.5rem;border-radius:2px;cursor:pointer;font-size:.95rem;margin-top:.75rem;transition:background .2s}
+.admin-btn:hover{background:#a82222}
+.admin-btn.secondary{background:#2d1f0e;border-color:#c9a84c44;color:var(--parchment-dim)}
+.admin-btn.secondary:hover{background:#3a2710;color:var(--parchment)}
+.admin-btn.danger{background:#6b0f0f}
+.admin-btn.danger:hover{background:#8b1a1a}
+.login-error{color:#e05050;font-style:italic;font-size:.9rem;margin-top:.5rem}
+
+/* ADMIN FORM */
+.admin-form-section{background:#1e1108;border:1px solid #c9a84c33;border-radius:3px;padding:1.5rem;margin-bottom:1.5rem}
+.admin-form-title{font-family:'Uncial Antiqua',serif;color:var(--gold);font-size:1.1rem;margin-bottom:1rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:.75rem}
+.form-row.single{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:.3rem}
+.form-label{font-size:.8rem;color:var(--parchment-dim);font-style:italic}
+.form-control{font-family:'IM Fell English',serif;background:#2d1f0e;border:1px solid #c9a84c33;color:var(--parchment);padding:.5rem .75rem;border-radius:2px;font-size:.9rem;resize:vertical}
+.form-control:focus{outline:none;border-color:var(--gold)}
+.form-control option{background:#2d1f0e}
+.img-upload-area{border:1.5px dashed #c9a84c44;border-radius:3px;padding:1.5rem;text-align:center;cursor:pointer;transition:border-color .2s;position:relative}
+.img-upload-area:hover{border-color:#c9a84c88}
+.img-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-upload-area p{color:var(--parchment-dim);font-style:italic;font-size:.85rem}
+.img-preview{width:100%;max-height:180px;object-fit:cover;border-radius:2px;margin-top:.75rem;display:none;border:1px solid #c9a84c33}
+.form-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+
+/* ADMIN ITEMS LIST */
+.admin-items{display:flex;flex-direction:column;gap:.75rem}
+.admin-item-row{background:#2d1f0e;border:1px solid #c9a84c22;border-radius:3px;padding:.85rem 1rem;display:flex;align-items:center;gap:1rem}
+.admin-item-thumb{width:50px;height:50px;object-fit:cover;border-radius:2px;border:1px solid #c9a84c22;flex-shrink:0}
+.admin-item-thumb-placeholder{width:50px;height:50px;border-radius:2px;border:1px solid #c9a84c22;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#1a1208;color:#c9a84c66;font-size:1.2rem}
+.admin-item-info{flex:1;min-width:0}
+.admin-item-name{font-family:'Uncial Antiqua',serif;color:var(--gold);font-size:.9rem}
+.admin-item-meta{color:var(--parchment-dim);font-size:.78rem;font-style:italic}
+.admin-item-actions{display:flex;gap:.5rem;flex-shrink:0}
+.icon-btn{background:none;border:1px solid #c9a84c33;color:var(--parchment-dim);border-radius:2px;padding:.3rem .6rem;cursor:pointer;font-size:.85rem;transition:all .2s}
+.icon-btn:hover{border-color:var(--gold);color:var(--gold)}
+.icon-btn.del:hover{border-color:#e05050;color:#e05050}
+
+/* CONTRASEÑA HINT */
+.admin-hint{text-align:center;margin-top:.5rem;font-size:.75rem;color:#c9a84c44;font-style:italic}
+
+/* FOOTER */
+footer{position:relative;z-index:2;text-align:center;padding:2rem 1rem 5rem;border-top:1px solid #c9a84c22;color:#c9a84c55;font-style:italic;font-size:.85rem}
+
+@media(max-width:560px){
+  .cart-bar{flex-wrap:wrap;gap:.5rem}
+  .cart-info{width:100%}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inn-sign">✦ La Posada del Tomo Eterno ✦</div>
+  <div class="inn-tagline">Reliquias, curiosidades y artefactos del viejo mundo</div>
+  <div class="rune-divider">⚜ ᚱ ᚢ ᚾ ᚨ ⚜</div>
+</header>
+
+<section class="hero-lore">
+  <p>Bienvenido, viajero. Toma asiento junto al fuego.<br>
+  Este grimorio contiene todo lo que el posadero ha reunido a lo largo de los años:<br>
+  artefactos sin dueño, curiosidades de tierras lejanas y reliquias que aún guardan historias.<br>
+  Todo está a la venta. Nada tiene precio fijo hasta que acordemos.</p>
+</section>
+
+<main>
+  <div class="tome-header">
+    <div class="tome-title">El Grimorio del Mercader</div>
+    <div class="tome-subtitle">Cada artefacto listado aguarda en la posada — consulta al posadero para adquirirlo</div>
+  </div>
+  <div class="tome-frame">
+    <span class="corner c-tl">᛫</span><span class="corner c-tr">᛫</span>
+    <span class="corner c-bl">᛫</span><span class="corner c-br">᛫</span>
+    <div class="filter-bar" id="filterBar"></div>
+    <div class="items-grid" id="itemsGrid"></div>
+  </div>
+</main>
+
+<footer>✦ La Posada del Tomo Eterno · Todo artículo es único y puede estar sujeto a disponibilidad ✦</footer>
+
+<!-- CART BAR -->
+<div class="cart-bar">
+  <div class="cart-info" id="cartInfo">El grimorio aguarda tu elección...</div>
+  <div class="cart-total" id="cartTotal"></div>
+  <a class="contact-btn" href="#" onclick="handleContact(event)">✉ Contactar al Posadero</a>
+</div>
+
+<!-- ADMIN TOGGLE -->
+<button class="admin-toggle" onclick="openAdmin()" title="Administrar">⚙</button>
+
+<!-- MODAL PRODUCTO -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal-tome">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalMedia"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-price" id="modalPrice"></div>
+    <button class="modal-add" id="modalAddBtn" onclick="addToCart()">⊕ Añadir al saco de viaje</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-inner">
+    <div class="admin-header">
+      <div class="admin-title">⚔ Sala del Posadero</div>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="adminLogin">
+      <div class="admin-login">
+        <div class="admin-login-title">Acceso Restringido</div>
+        <p>Solo el posadero puede entrar aquí.<br>Introduce la contraseña secreta.</p>
+        <input class="admin-input" type="password" id="passInput" placeholder="Contraseña..." onkeydown="if(event.key==='Enter')checkPass()"/>
+        <button class="admin-btn" onclick="checkPass()">Entrar</button>
+        <div class="login-error" id="loginError" style="display:none">Contraseña incorrecta, forastero.</div>
+        <div class="admin-hint">Contraseña por defecto: posadero123 — cámbiala en el panel</div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="adminDash" style="display:none">
+
+      <!-- Cambiar contraseña -->
+      <div class="admin-form-section" style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleSection('passSection')">
+          <div class="admin-form-title" style="margin:0">🔑 Cambiar contraseña</div>
+          <span style="color:var(--gold-dim);font-size:.9rem" id="passSectionArrow">▼</span>
+        </div>
+        <div id="passSection" style="display:none;margin-top:1rem">
+          <div class="form-group" style="margin-bottom:.75rem">
+            <label class="form-label">Nueva contraseña</label>
+            <input class="form-control" type="password" id="newPass1" placeholder="Nueva contraseña"/>
+          </div>
+          <div class="form-group" style="margin-bottom:.75rem">
+            <label class="form-label">Repetir contraseña</label>
+            <input class="form-control" type="password" id="newPass2" placeholder="Repetir..."/>
+          </div>
+          <div class="login-error" id="passChangeError" style="display:none;margin-bottom:.5rem"></div>
+          <button class="admin-btn" onclick="changePassword()">Guardar contraseña</button>
+        </div>
+      </div>
+
+      <!-- Configuración de contacto -->
+      <div class="admin-form-section" style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer" onclick="toggleSection('contactSection')">
+          <div class="admin-form-title" style="margin:0">✉ Contacto de la posada</div>
+          <span style="color:var(--gold-dim);font-size:.9rem" id="contactSectionArrow">▼</span>
+        </div>
+        <div id="contactSection" style="display:none;margin-top:1rem">
+          <div class="form-group" style="margin-bottom:.75rem">
+            <label class="form-label">WhatsApp (ej: 5491100000000) o Email</label>
+            <input class="form-control" type="text" id="contactInput" placeholder="5491100000000 o tu@correo.com"/>
+          </div>
+          <div class="form-group" style="margin-bottom:.75rem">
+            <label class="form-label">Nombre de la posada</label>
+            <input class="form-control" type="text" id="innNameInput" placeholder="La Posada del Tomo Eterno"/>
+          </div>
+          <button class="admin-btn" onclick="saveContact()">Guardar contacto</button>
+        </div>
+      </div>
+
+      <!-- Agregar / editar item -->
+      <div class="admin-form-section">
+        <div class="admin-form-title" id="formTitle">✦ Agregar nuevo artefacto</div>
+        <input type="hidden" id="editingId"/>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre del artefacto</label>
+            <input class="form-control" id="fName" type="text" placeholder="Ej: Anillo de Plata"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Categoría</label>
+            <input class="form-control" id="fCat" type="text" placeholder="Ej: accesorio, reliquia..."/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Precio (en tu moneda)</label>
+            <input class="form-control" id="fPrice" type="number" placeholder="0"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Etiqueta corta</label>
+            <input class="form-control" id="fTag" type="text" placeholder="Ej: Pieza única"/>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label class="form-label">Descripción (historia del artefacto)</label>
+            <textarea class="form-control" id="fDesc" rows="3" placeholder="Cuenta la historia de este artefacto..."></textarea>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group">
+            <label class="form-label">Imagen del artefacto</label>
+            <div class="img-upload-area" onclick="document.getElementById('fImg').click()">
+              <input type="file" id="fImg" accept="image/*" style="display:none" onchange="previewImage(event)"/>
+              <p>📷 Hacé clic aquí para subir una foto<br><small>JPG, PNG, WEBP — máx. recomendado 2MB</small></p>
+              <img id="imgPreview" class="img-preview" alt="preview"/>
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="admin-btn" onclick="saveItem()">⊕ Guardar artefacto</button>
+          <button class="admin-btn secondary" onclick="cancelEdit()" id="cancelEditBtn" style="display:none">Cancelar edición</button>
+        </div>
+      </div>
+
+      <!-- Lista de items -->
+      <div class="admin-form-section" style="margin-top:1.5rem">
+        <div class="admin-form-title">📜 Artefactos en el grimorio</div>
+        <div class="admin-items" id="adminItemsList"></div>
+      </div>
+
+    </div><!-- /adminDash -->
+  </div>
+</div>
+
+<script>
+/* ══ SVG SEALS ══ */
+const SEALS={
+  accesorio:`<svg viewBox="0 0 48 48" fill="none"><polygon points="24,4 30,18 44,18 33,27 37,42 24,33 11,42 15,27 4,18 18,18" stroke="#c9a84c" stroke-width="1.5"/><circle cx="24" cy="24" r="5" fill="#c9a84c44" stroke="#c9a84c" stroke-width="1"/></svg>`,
+  curiosidad:`<svg viewBox="0 0 48 48" fill="none"><path d="M24 6C14 6 8 14 8 22c0 8 6 14 12 16v4h8v-4c6-2 12-8 12-16C40 14 34 6 24 6Z" fill="#8b1a1a33" stroke="#c9a84c" stroke-width="1.5"/><circle cx="24" cy="22" r="5" fill="#c9a84c33" stroke="#c9a84c" stroke-width="1"/><line x1="24" y1="8" x2="24" y2="12" stroke="#c9a84c" stroke-width="1.5"/></svg>`,
+  reliquia:`<svg viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="3" stroke="#c9a84c" stroke-width="1.5"/><rect x="14" y="14" width="20" height="20" rx="2" fill="#c9a84c22" stroke="#c9a84c66" stroke-width="1"/><line x1="24" y1="8" x2="24" y2="14" stroke="#c9a84c" stroke-width="1.5"/><line x1="24" y1="34" x2="24" y2="40" stroke="#c9a84c" stroke-width="1.5"/><line x1="8" y1="24" x2="14" y2="24" stroke="#c9a84c" stroke-width="1.5"/><line x1="34" y1="24" x2="40" y2="24" stroke="#c9a84c" stroke-width="1.5"/></svg>`,
+  vestimenta:`<svg viewBox="0 0 48 48" fill="none"><path d="M16 8L8 20l8-2v24h16V18l8 2L32 8q-4 4-8 4t-8-4Z" fill="#8b1a1a22" stroke="#c9a84c" stroke-width="1.5"/><line x1="20" y1="22" x2="28" y2="22" stroke="#c9a84c66" stroke-width="1"/><line x1="20" y1="28" x2="28" y2="28" stroke="#c9a84c66" stroke-width="1"/></svg>`,
+  objeto:`<svg viewBox="0 0 48 48" fill="none"><path d="M24 6L42 38H6Z" fill="#c9a84c11" stroke="#c9a84c" stroke-width="1.5"/><circle cx="24" cy="28" r="4" fill="#8b1a1a55" stroke="#c9a84c" stroke-width="1"/><line x1="24" y1="8" x2="24" y2="18" stroke="#c9a84c66" stroke-width="1" stroke-dasharray="2,2"/></svg>`
+};
+function getSeal(cat){return SEALS[cat]||SEALS.objeto}
+
+/* ══ STORAGE ══ */
+const STORE_KEY='posada_items';
+const PASS_KEY='posada_pass';
+const CFG_KEY='posada_cfg';
+
+function loadItems(){
+  try{const d=localStorage.getItem(STORE_KEY);return d?JSON.parse(d):getDefaultItems()}
+  catch{return getDefaultItems()}
+}
+function saveItems(arr){localStorage.setItem(STORE_KEY,JSON.stringify(arr))}
+function loadPass(){return localStorage.getItem(PASS_KEY)||'posadero123'}
+function savePass(p){localStorage.setItem(PASS_KEY,p)}
+function loadCfg(){try{const d=localStorage.getItem(CFG_KEY);return d?JSON.parse(d):{contact:'',innName:''}}catch{return{contact:'',innName:''}}}
+function saveCfg(c){localStorage.setItem(CFG_KEY,JSON.stringify(c))}
+
+function getDefaultItems(){
+  return[
+    {id:1,name:"Arete de Luna Plateada",cat:"accesorio",price:250,desc:"Forjado en plata de mina antigua. Dicen los bardos que quien lo porta ve los sueños con más claridad.",tag:"Oferta única",img:null},
+    {id:2,name:"Pulsera de Cuero Trenzado",cat:"accesorio",price:180,desc:"Trenzada con tres tiras de cuero curtido a mano. Para el viajero que no precisa de magia pero sí de estilo.",tag:"Stock limitado",img:null},
+    {id:3,name:"Frasco de Cristal Tallado",cat:"curiosidad",price:320,desc:"Un frasco vacío con grabados de zarcillos. Apto para pociones, perfumes o secretos bien guardados.",tag:"Rareza",img:null},
+    {id:4,name:"Caja de Madera con Bisagras",cat:"reliquia",price:550,desc:"Tallada con motivos de hojas y espirales. Para guardar lo que más vale en este mundo o el siguiente.",tag:"Artesanal",img:null},
+    {id:5,name:"Medallón Ovalado Dorado",cat:"accesorio",price:680,desc:"Marco dorado con espacio para un miniretrato. Vacío, aguarda ser llenado de recuerdos.",tag:"Exclusivo",img:null}
+  ]
+}
+
+/* ══ STATE ══ */
+let items=loadItems();
+let activeFilter='todos';
+let cart=[];
+let selectedItem=null;
+let editingId=null;
+let adminLoggedIn=false;
+let currentImgData=null;
+
+/* ══ SHOP ══ */
+function getCategories(){return['todos',...new Set(items.map(i=>i.cat))]}
+
+function renderFilters(){
+  const cfg=loadCfg();
+  if(cfg.innName){
+    document.querySelector('.inn-sign').textContent='✦ '+cfg.innName+' ✦';
+    document.title=cfg.innName;
+  }
+  document.getElementById('filterBar').innerHTML=getCategories().map(c=>{
+    const lbl=c.charAt(0).toUpperCase()+c.slice(1);
+    return`<button class="filter-btn${c===activeFilter?' active':''}" onclick="setFilter('${c}')">${lbl}</button>`;
+  }).join('');
+}
+
+function setFilter(c){activeFilter=c;renderFilters();renderItems()}
+
+function renderItems(){
+  const grid=document.getElementById('itemsGrid');
+  const list=activeFilter==='todos'?items:items.filter(i=>i.cat===activeFilter);
+  if(!list.length){grid.innerHTML='<div class="empty-msg">No hay artefactos de esta categoría en el grimorio...</div>';return}
+  grid.innerHTML=list.map(item=>{
+    const inCart=cart.some(c=>c.id===item.id);
+    const media=item.img
+      ?`<img class="item-img" src="${item.img}" alt="${item.name}"/>`
+      :`<div class="item-seal">${getSeal(item.cat)}</div>`;
+    return`<div class="item-card" onclick="openModal(${item.id})">
+      ${inCart?'<div class="item-badge-dot"></div>':''}
+      ${media}
+      <div class="item-name">${item.name}</div>
+      <div class="item-desc">${item.desc}</div>
+      <div class="item-footer">
+        <div class="item-price">✦ $${item.price}</div>
+        <div class="item-tag">${item.tag}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openModal(id){
+  selectedItem=items.find(i=>i.id===id);
+  if(!selectedItem)return;
+  const inCart=cart.some(c=>c.id===id);
+  const mediaEl=document.getElementById('modalMedia');
+  if(selectedItem.img){
+    mediaEl.innerHTML=`<img class="modal-img" src="${selectedItem.img}" alt="${selectedItem.name}"/>`;
+  }else{
+    mediaEl.innerHTML=`<div class="modal-seal">${getSeal(selectedItem.cat)}</div>`;
+  }
+  document.getElementById('modalTitle').textContent=selectedItem.name;
+  document.getElementById('modalBody').textContent=selectedItem.desc;
+  document.getElementById('modalPrice').textContent='✦ $'+selectedItem.price+' monedas de plata';
+  const btn=document.getElementById('modalAddBtn');
+  btn.textContent=inCart?'✓ Ya en tu saco de viaje':'⊕ Añadir al saco de viaje';
+  btn.disabled=inCart;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');selectedItem=null}
+function handleOverlayClick(e){if(e.target===document.getElementById('modal'))closeModal()}
+
+function addToCart(){
+  if(!selectedItem||cart.some(c=>c.id===selectedItem.id))return;
+  cart.push(selectedItem);
+  updateCart();closeModal();renderItems();
+}
+function updateCart(){
+  const info=document.getElementById('cartInfo');
+  const total=document.getElementById('cartTotal');
+  if(!cart.length){info.textContent='El grimorio aguarda tu elección...';total.textContent='';return}
+  const sum=cart.reduce((s,i)=>s+i.price,0);
+  info.textContent=`${cart.length} artefacto${cart.length>1?'s':''} en el saco`;
+  total.textContent='✦ $'+sum;
+}
+function handleContact(e){
+  e.preventDefault();
+  const cfg=loadCfg();
+  const c=cfg.contact||'';
+  const inn=cfg.innName||'La Posada del Tomo Eterno';
+  const subject='Consulta desde '+inn;
+  let body=cart.length
+    ?'Hola, me interesa:\n\n'+cart.map(i=>`- ${i.name} ($${i.price})`).join('\n')+'\n\nTotal: $'+cart.reduce((s,i)=>s+i.price,0)+'\n\n¿Podemos acordar?'
+    :'Hola, me interesa consultar sobre los artefactos disponibles.';
+  if(!c){alert('El posadero aún no configuró su dirección de contacto. Configurala en el panel de administración.');return}
+  const isPhone=/^\d+$/.test(c.replace(/[\s+\-()]/g,''));
+  const link=isPhone
+    ?`https://wa.me/${c.replace(/\D/g,'')}?text=${encodeURIComponent(subject+'\n\n'+body)}`
+    :`mailto:${c}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  window.open(link,'_blank');
+}
+
+/* ══ ADMIN ══ */
+function openAdmin(){document.getElementById('adminPanel').classList.add('open');document.body.style.overflow='hidden'}
+function closeAdmin(){document.getElementById('adminPanel').classList.remove('open');document.body.style.overflow=''}
+
+function checkPass(){
+  const val=document.getElementById('passInput').value;
+  if(val===loadPass()){
+    adminLoggedIn=true;
+    document.getElementById('adminLogin').style.display='none';
+    document.getElementById('adminDash').style.display='block';
+    const cfg=loadCfg();
+    document.getElementById('contactInput').value=cfg.contact||'';
+    document.getElementById('innNameInput').value=cfg.innName||'';
+    renderAdminList();
+  }else{
+    document.getElementById('loginError').style.display='block';
+  }
+}
+
+function toggleSection(id){
+  const el=document.getElementById(id);
+  const arrow=document.getElementById(id+'Arrow');
+  const open=el.style.display==='block';
+  el.style.display=open?'none':'block';
+  if(arrow)arrow.textContent=open?'▼':'▲';
+}
+
+function changePassword(){
+  const p1=document.getElementById('newPass1').value;
+  const p2=document.getElementById('newPass2').value;
+  const err=document.getElementById('passChangeError');
+  if(!p1){err.textContent='La contraseña no puede estar vacía.';err.style.display='block';return}
+  if(p1!==p2){err.textContent='Las contraseñas no coinciden.';err.style.display='block';return}
+  savePass(p1);
+  err.style.display='none';
+  document.getElementById('newPass1').value='';
+  document.getElementById('newPass2').value='';
+  alert('✦ Contraseña actualizada, posadero.');
+}
+
+function saveContact(){
+  const c=document.getElementById('contactInput').value.trim();
+  const n=document.getElementById('innNameInput').value.trim();
+  saveCfg({contact:c,innName:n});
+  renderFilters();
+  alert('✦ Configuración guardada.');
+}
+
+function previewImage(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    currentImgData=ev.target.result;
+    const prev=document.getElementById('imgPreview');
+    prev.src=currentImgData;
+    prev.style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveItem(){
+  const name=document.getElementById('fName').value.trim();
+  const cat=document.getElementById('fCat').value.trim().toLowerCase();
+  const price=parseInt(document.getElementById('fPrice').value)||0;
+  const tag=document.getElementById('fTag').value.trim();
+  const desc=document.getElementById('fDesc').value.trim();
+  if(!name||!cat||!desc){alert('Completá al menos nombre, categoría y descripción.');return}
+  if(editingId!==null){
+    const idx=items.findIndex(i=>i.id===editingId);
+    if(idx>-1){
+      items[idx]={...items[idx],name,cat,price,tag,desc};
+      if(currentImgData)items[idx].img=currentImgData;
+    }
+    cancelEdit();
+  }else{
+    const newId=items.length?Math.max(...items.map(i=>i.id))+1:1;
+    items.push({id:newId,name,cat,price,tag,desc,img:currentImgData||null});
+    clearForm();
+  }
+  saveItems(items);
+  renderFilters();
+  renderItems();
+  renderAdminList();
+}
+
+function clearForm(){
+  document.getElementById('fName').value='';
+  document.getElementById('fCat').value='';
+  document.getElementById('fPrice').value='';
+  document.getElementById('fTag').value='';
+  document.getElementById('fDesc').value='';
+  document.getElementById('fImg').value='';
+  document.getElementById('imgPreview').style.display='none';
+  currentImgData=null;
+}
+
+function cancelEdit(){
+  editingId=null;
+  document.getElementById('editingId').value='';
+  document.getElementById('formTitle').textContent='✦ Agregar nuevo artefacto';
+  document.getElementById('cancelEditBtn').style.display='none';
+  clearForm();
+}
+
+function editItem(id){
+  const item=items.find(i=>i.id===id);
+  if(!item)return;
+  editingId=id;
+  document.getElementById('editingId').value=id;
+  document.getElementById('fName').value=item.name;
+  document.getElementById('fCat').value=item.cat;
+  document.getElementById('fPrice').value=item.price;
+  document.getElementById('fTag').value=item.tag;
+  document.getElementById('fDesc').value=item.desc;
+  currentImgData=item.img||null;
+  const prev=document.getElementById('imgPreview');
+  if(item.img){prev.src=item.img;prev.style.display='block';}
+  else{prev.style.display='none';}
+  document.getElementById('formTitle').textContent='✏ Editando: '+item.name;
+  document.getElementById('cancelEditBtn').style.display='inline-block';
+  document.querySelector('.admin-form-section').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteItem(id){
+  if(!confirm('¿Eliminar este artefacto del grimorio?'))return;
+  items=items.filter(i=>i.id!==id);
+  cart=cart.filter(c=>c.id!==id);
+  saveItems(items);
+  updateCart();
+  renderFilters();
+  renderItems();
+  renderAdminList();
+}
+
+function renderAdminList(){
+  const el=document.getElementById('adminItemsList');
+  if(!items.length){el.innerHTML='<div class="empty-msg" style="padding:1.5rem">El grimorio está vacío.</div>';return}
+  el.innerHTML=items.map(item=>{
+    const thumb=item.img
+      ?`<img class="admin-item-thumb" src="${item.img}" alt="${item.name}"/>`
+      :`<div class="admin-item-thumb-placeholder">${getSeal(item.cat)}</div>`;
+    return`<div class="admin-item-row">
+      ${thumb}
+      <div class="admin-item-info">
+        <div class="admin-item-name">${item.name}</div>
+        <div class="admin-item-meta">${item.cat} · $${item.price} · ${item.tag}</div>
+      </div>
+      <div class="admin-item-actions">
+        <button class="icon-btn" onclick="editItem(${item.id})">✏</button>
+        <button class="icon-btn del" onclick="deleteItem(${item.id})">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══ INIT ══ */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeModal();
+    if(document.getElementById('adminPanel').classList.contains('open'))closeAdmin();
+  }
+});
+
+renderFilters();
+renderItems();
+</script>
+</body>
+</html>
